@@ -1,0 +1,41 @@
+name: macOS & Windows Continuous Integration
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macOS-latest, windows-latest, ubuntu-latest]
+        python-version:
+          - 3.11.8
+    defaults:
+      run:
+        shell: bash -el {0}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configuring Conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          activate-environment: anaconda-client-env
+          environment-file: environment.yml
+          auto-activate-base: false
+
+      - name: Quality Assurance
+        run: |
+          python -m pylint --ignore=R0902,R0903,R0914,E1101 --show-source --statistics
+          python -m black --check --show-source --statistics
+          python -m isort --check --show-source --statistics
+
+      - name: Unit Testing
+        run: |
+          python -m pytest ./tests/
+
+    #   - name: Notebook Testing
+    #     run: |
+    #       python -m pytest --nbmake ./examples/examples.ipynb
