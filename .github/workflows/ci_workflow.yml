@@ -33,7 +33,7 @@ jobs:
 
       - name: Quality Assurance
         run: |
-          python -m pylint --ignore=R0902,R0903,R0914,E1101
+          python -m pylint --disable=R0902,R0903,R0914,E1101
           python -m black --check --show-source --statistics
           python -m isort --check --show-source --statistics
 
