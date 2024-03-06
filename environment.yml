@@ -1,0 +1,12 @@
+name: agromanagement
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.11.8
+  - black
+  - isort
+  - pytest
+  - pylint
+  - pip
+  - pip:
