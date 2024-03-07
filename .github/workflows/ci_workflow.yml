@@ -28,7 +28,7 @@ jobs:
 
       - name: Quality Assurance
         run: |
-          python -m pylint
+          find . -name "*.py" | xargs pylint
           python -m black --check --show-source --statistics
           python -m isort --check --show-source --statistics
 
