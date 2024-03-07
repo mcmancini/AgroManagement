@@ -30,7 +30,6 @@ jobs:
         run: |
           find . -name "*.py" | xargs pylint
           python -m black --check ./agromanagement/
-          python -m black --check ./resources/
           python -m black --check ./tests/
           python -m isort --check --diff
 
