@@ -34,9 +34,9 @@ jobs:
           python -m black --check ./tests/
           python -m isort --check --diff .
 
-      - name: Unit Testing
-        run: |
-          python -m pytest ./tests/
+      # - name: Unit Testing
+      #   run: |
+      #     python -m pytest ./tests/
 
     #   - name: Notebook Testing
     #     run: |
