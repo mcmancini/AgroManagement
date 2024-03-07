@@ -29,8 +29,10 @@ jobs:
       - name: Quality Assurance
         run: |
           find . -name "*.py" | xargs pylint
-          python -m black --check
-          python -m isort --check
+          python -m black --check ./agromanagement/
+          python -m black --check ./resources/
+          python -m black --check ./tests/
+          python -m isort --check --diff
 
       - name: Unit Testing
         run: |
