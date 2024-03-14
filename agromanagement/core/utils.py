@@ -309,8 +309,8 @@ def read_parcel_data(gid, folder):
         for filename in files:
             if filename.endswith("_meta.json"):
                 filepath = os.path.join(root, filename)
-                with open(filepath, encoding="utf-8") as f:
-                    data = json.load(f)
+                with open(filepath, encoding="utf-8") as file:
+                    data = json.load(file)
                     for feature in data["features"]:
                         parcel_id = feature["gid"]
                         coords = feature["rp"]
