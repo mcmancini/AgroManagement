@@ -6,6 +6,7 @@ dependencies:
   - python=3.11.8
   - black
   - geopandas
+  - ipykernel
   - isort
   - pytest
   - pylint
