@@ -1,2 +1,5 @@
+[MASTER]
+init-hook="import os, sys; sys.path.append(os.getcwd())"
+
 [MESSAGES CONTROL]
 disable=R0902,R0903,R0914,E1101
