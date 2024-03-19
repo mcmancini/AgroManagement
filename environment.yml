@@ -13,6 +13,7 @@ dependencies:
   - pylint
   - pip
   - psycopg2
+  - pyproj
   - pyyaml
   - pip:
     - rasterio[s3]
