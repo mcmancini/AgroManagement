@@ -5,8 +5,16 @@ channels:
 dependencies:
   - python=3.11.8
   - black
+  - gdal
+  - geopandas
+  - ipykernel
   - isort
   - pytest
   - pylint
   - pip
+  - psycopg2
+  - pyproj
+  - pyyaml
   - pip:
+    - rasterio[s3]
+    - sat-search
