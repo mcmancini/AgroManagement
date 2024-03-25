@@ -16,5 +16,6 @@ dependencies:
   - pyproj
   - pyyaml
   - pip:
+    - cdsetool
     - rasterio[s3]
     - sat-search
