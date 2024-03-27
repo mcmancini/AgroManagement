@@ -95,10 +95,10 @@ download_sentinel(geotiff_file, output_folder):
 # DEFAULT_DOWNLOAD_PATH = os.path.join(ROOT_DIR, "resources", "era_5")
 # def download_era(start_date, end_date, download_path):
 #     """
-#     Download and store a netcdf file containing ERA5 reanalysis 
+#     Download and store a netcdf file containing ERA5 reanalysis
 #     data to compute Vapour Pressure Deficit to use to estimate
-#     LAI in the UK. 
-#     We use Copernicus and we interface with their servers using 
+#     LAI in the UK.
+#     We use Copernicus and we interface with their servers using
 #     the CDS API:
 #     (https://confluence.ecmwf.int/display/CKB/How+to+download+ERA5).
 #     More info on how to optimise data download can be found here:
@@ -110,6 +110,6 @@ download_sentinel(geotiff_file, output_folder):
 #         interest. Declared as "yyyy-mm-dd", e.g., "2019-01-01"
 #     :param end_date (str): The end date for the timeframe of
 #         interest. Declared as "yyyy-mm-dd", e.g., "2021-12-31"
-#     :param 
+#     :param
 #     """
 #     pass

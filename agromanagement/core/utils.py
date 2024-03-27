@@ -319,5 +319,3 @@ def read_parcel_data(gid, folder):
                         coords = feature["rp"]
                         metadata[parcel_id] = coords
     return metadata.get(gid, "Parcel not found")
-
-
