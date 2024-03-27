@@ -9,6 +9,7 @@ dependencies:
   - geopandas
   - ipykernel
   - isort
+  - pandas
   - pytest
   - pylint
   - pip
@@ -16,6 +17,8 @@ dependencies:
   - pyproj
   - pyyaml
   - pip:
+    # - boto3
+    # - cdsapi
     - cdsetool
-    - rasterio[s3]
-    - sat-search
+    # - rasterio[s3]
+    # - sat-search
