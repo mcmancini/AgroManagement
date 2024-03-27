@@ -1,13 +1,14 @@
 # A model of farm management in the UK
 
-## Authors, afifliation and licence
+## Authors, affiliation and licence
 **Authors**: 
 - Mattia C. Mancini (m.c.mancini@exeter.ac.uk)
 - Brett Day
 - Amy Binner
 - Muhammad Hasan
 - Chris Lee
-- Danny Williamson. 
+- Danny Williamson
+- Alex Diaz
 
 **Affiliation**: Land, Environment, Economics and Policy Institute, University of Exeter.
 
