@@ -9,13 +9,17 @@ dependencies:
   - geopandas
   - ipykernel
   - isort
+  - pandas
   - pytest
   - pylint
   - pip
   - psycopg2
   - pyproj
   - pyyaml
+  - xarray
   - pip:
+    # - boto3
+    - cdsapi
     - cdsetool
-    - rasterio[s3]
-    - sat-search
+    # - rasterio[s3]
+    # - sat-search
