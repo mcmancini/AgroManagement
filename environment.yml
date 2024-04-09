@@ -16,9 +16,10 @@ dependencies:
   - psycopg2
   - pyproj
   - pyyaml
+  - xarray
   - pip:
     # - boto3
-    # - cdsapi
+    - cdsapi
     - cdsetool
     # - rasterio[s3]
     # - sat-search
