@@ -137,7 +137,7 @@ def download_era(start_date, end_date, download_path=DEFAULT_DOWNLOAD_PATH):
             continue
         file_list = []
         for month in range(1, 13):
-            print("============================================================")
+            print("========================================================")
             print(f"Downloading data for year '{year}' and month '{month}' ...")
             monthly_filename = f"{download_path}/ERA5_{year}_{month:02d}.nc"
             if os.path.exists(monthly_filename):
@@ -164,6 +164,8 @@ def download_era(start_date, end_date, download_path=DEFAULT_DOWNLOAD_PATH):
                 },
                 f"{download_path}/ERA5_{year}_{month:02d}.nc",
             )
+            file_list.append(monthly_filename)
+
         if len(file_list) != 12:
             raise ValueError(
                 f"There are not 12 months of available data for year '{year}'."
