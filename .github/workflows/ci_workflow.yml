@@ -8,7 +8,8 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]
-        os: [macOS-latest, windows-latest, ubuntu-latest]
+        # os: [macOS-latest, windows-latest, ubuntu-latest]
+        os: [macos-14-large, windows-latest, ubuntu-latest]
         python-version:
           - 3.11.8
     defaults:
