@@ -42,7 +42,7 @@ The main parameters of the model are the following:
 - Initial soil conditions (nutrients and water content) - $\boldsymbol{s}$
 
 ### Model outputs
-- crop yield
+- crop yield - $f(x, q|w, s)$
 - management choices - $\boldsymbol{x, q}$
 
 Of these, $\boldsymbol{\alpha}$ and $\boldsymbol{\beta}$ are known but uncertain for the UK, $\boldsymbol{w}$ and $\boldsymbol{s}$ are known, and the management choices $\boldsymbol{x}$ and $\boldsymbol{q}$ are endpogenous.
