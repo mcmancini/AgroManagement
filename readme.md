@@ -35,9 +35,15 @@ With this project we aim to build a structural, biophysically constrained, econo
 The main parameters of the model are the following:
 - Soil functions describing water conductivity and water retention in the soil - $\boldsymbol{\alpha}$
 - Plant physiology - $\boldsymbol{\beta}$
+- Additional parameters on downscaled weather inputs - $\boldsymbol{\gamma}$
+
+### Model inputs
 - Weather, soil type - $\boldsymbol{w}$
 - Initial soil conditions (nutrients and water content) - $\boldsymbol{s}$
-- Managment choices - $\boldsymbol{x, q}$
+
+### Model outputs
+- crop yield - $f(x, q|w, s)$
+- management choices - $\boldsymbol{x, q}$
 
 Of these, $\boldsymbol{\alpha}$ and $\boldsymbol{\beta}$ are known but uncertain for the UK, $\boldsymbol{w}$ and $\boldsymbol{s}$ are known, and the management choices $\boldsymbol{x}$ and $\boldsymbol{q}$ are endpogenous.
 ### Modelling crop yields
