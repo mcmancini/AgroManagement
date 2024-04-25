@@ -45,7 +45,7 @@ The main parameters of the model are the following:
 - crop yield - $f(x, q|w, s)$
 - management choices - $\boldsymbol{x, q}$
 
-Of these, $\boldsymbol{\alpha}$ and $\boldsymbol{\beta}$ are known but uncertain for the UK, $\boldsymbol{w}$ and $\boldsymbol{s}$ are known, and the management choices $\boldsymbol{x}$ and $\boldsymbol{q}$ are endpogenous.
+Of these, $\boldsymbol{\alpha}$ and $\boldsymbol{\beta}$ are known but uncertain for the UK, $\boldsymbol{w}$ and $\boldsymbol{s}$ are known, and the management choices $\boldsymbol{x}$ and $\boldsymbol{q}$ are endogenous.
 ### Modelling crop yields
 The management model relies on the UK implementation of the WOFOST crop yield simulator to predict yields:
 $$y_{i} = f(\boldsymbol{x, q; \hat{w}, \hat{s} | \alpha, \beta})$$
@@ -54,7 +54,7 @@ $$y_{i} = f(\boldsymbol{x, q; \hat{w}, \hat{s} | \alpha, \beta})$$
 We assume that a farmer has the goal of maximise revenues minus costs through optimal management:
 $$\max_{\boldsymbol{x, q}} pf(\boldsymbol{x, q; \hat{w}, \hat{s} | \alpha, \beta}) - c\boldsymbol{x} - C(\boldsymbol{x} > 0)$$
 - Management choices apply over a period of time $T$ for discrete time intervals (e.g. fortnightly): $t = 1, 2, ..., T$
-- Planting choice: $\boldsymbol{x} = [x_{1}, x_{2}, ..., x_{T}] \quad\text{      } x_{t} &isin; \lbrace 0, 1\rbrace, \quad\text{      } \sum\limits_{t} x_{t} = 1$
+- Planting choice: $\boldsymbol{x} = [x_{1}, x_{2}, ..., x_{T}] \quad\text{      } x_{t} \in; \lbrace 0, 1\rbrace, \quad\text{      } \sum\limits_{t} x_{t} = 1$
 - Fertiliser application choice: $\boldsymbol{q} = [q_{1}, q_{2}, ..., q_{T}] \quad\text{      } q_{t}\geq 0$
 - Yield unit price: $p$
 - Fertiliser application unit price: $c$
