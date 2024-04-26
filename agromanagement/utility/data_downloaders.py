@@ -173,7 +173,11 @@ def download_era(start_date, end_date, download_path=DEFAULT_DOWNLOAD_PATH):
         print(f"Combining monthly data for year '{year} ...'")
         datasets = [xr.open_dataset(file) for file in file_list]
         combined_dataset = xr.concat(datasets, dim="time")
-        combined_dataset.to_netcdf(f"{download_path}/ERA5_{year}.nc")
+        encoding = {
+            var: {"dtype": combined_dataset[var].dtype}
+            for var in combined_dataset.data_vars
+        }
+        combined_dataset.to_netcdf(f"{download_path}/ERA5_{year}.nc", encoding=encoding)
 
         for dataset in datasets:
             dataset.close()
