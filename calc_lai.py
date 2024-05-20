@@ -17,12 +17,12 @@ lai = LAI_S1S2_fusion(
     s1dir=SENTINEL_1_UNZIPPED_FOLDER,
     s2dir=SENTINEL_2_UNZIPPED_FOLDER,
     ECMWF_ERA5_VPD=ERA_DIR,
-    snap_graphs_dir="D:/Documents/GitHub/AgroManagement/resources/snap_graphs/",
+    snap_graphs_dir="C:/Users/mcm216/.snap/graphs/",
     snap_gtp_dir="C:/Program Files/esa-snap/bin/",
     startdate=START_DATE,
     enddate=END_DATE
 )
 
-lai.S1_to_VVVH()
+# lai.S1_to_VVVH()
 lai.S2_to_LAI()
 lai.lai_ts_creation()
