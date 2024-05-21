@@ -1,1 +1,4 @@
 __pycache__/
+resources/sentinel_1/
+resources/sentinel_l2a/
+resources/era_5/
