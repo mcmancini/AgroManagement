@@ -21,7 +21,7 @@ dependencies:
   - pip:
     # - boto3
     - cdsapi
-    - cdsetool=0.2.8
+    - cdsetool==0.2.8
     - rasterstats
     # - rasterio[s3]
     # - sat-search
