@@ -17,32 +17,30 @@ import sys
 import geopandas as gpd
 from cdsetool.credentials import Credentials
 from cdsetool.download import download_features
+from cdsetool.monitor import StatusMonitor
 from cdsetool.query import query_features
 from shapely.geometry import mapping
 
 from agromanagement.utility.data_downloaders import download_era
 from agromanagement.utility.file_management import unzip_all_files
-from agromanagement.utility.lai_fusion import LAI_S1S2_fusion
-from agromanagement.utility.paths import ROOT_DIR
 
-sys.path.append('../')
+sys.path.append("../")
 
 credentials = Credentials()
 
-
 # define a parcel
 parcels = gpd.read_file("resources/" + "lcm2021_tile_11_1014_647.geojson")
-parcel = parcels.iloc[1025:1026,:]
+parcel = parcels.iloc[1025:1026, :]
 print(parcel)
 
-geometry = parcel.iloc[0,:]["geometry"]
+geometry = parcel.iloc[0, :]["geometry"]
 geom_json = mapping(geometry)
 
 START_DATE = "2019-04-01"
 END_DATE = "2019-04-30"
 
-SENTINEL_1_OUTPUT_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_1/Raw/"
-SENTINEL_2_OUTPUT_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_2/Raw/"
+SENTINEL_1_OUTPUT_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_1/"
+SENTINEL_2_OUTPUT_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_2/"
 
 
 S1_COLLECTION = "Sentinel1"
@@ -56,8 +54,9 @@ search_terms = {
     "productType": S1_PRODUCT_TYPE,
 }
 
-sentinel_1_feature_list = query_features(collection=S1_COLLECTION, search_terms=search_terms)
-
+sentinel_1_feature_list = query_features(
+    collection=S1_COLLECTION, search_terms=search_terms
+)
 
 S2_COLLECTION = "Sentinel2"
 S2_PRODUCT_TYPE = "S2MSI2A"
@@ -70,39 +69,42 @@ search_terms = {
     "productType": S2_PRODUCT_TYPE,
 }
 
-sentinel_2_feature_list = query_features(collection=S2_COLLECTION, search_terms=search_terms)
+sentinel_2_feature_list = query_features(
+    collection=S2_COLLECTION, search_terms=search_terms
+)
 
-s1_downloads = download_features(sentinel_1_feature_list, SENTINEL_1_OUTPUT_FOLDER)
+s1_downloads = download_features(
+    sentinel_1_feature_list,
+    SENTINEL_1_OUTPUT_FOLDER,
+    {
+        "concurrency": 4,
+        "monitor": StatusMonitor(),
+        "credentials": Credentials(),
+    },
+)
 for item in s1_downloads:
     print(f"feature {item} downloaded")
 
-s2_downloads = download_features(sentinel_2_feature_list, SENTINEL_2_OUTPUT_FOLDER)
+
+s2_downloads = download_features(
+    sentinel_2_feature_list,
+    SENTINEL_2_OUTPUT_FOLDER,
+    {
+        "concurrency": 4,
+        "monitor": StatusMonitor(),
+        "credentials": Credentials(),
+    },
+)
 for item in s2_downloads:
     print(f"feature {item} downloaded")
 
 download_era(start_date=START_DATE, end_date=END_DATE)
 
+## Unizip if required
 SENTINEL_1_UNZIPPED_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_1/Unzipped/"
 SENTINEL_2_UNZIPPED_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_2/Unzipped/"
 
 unzip_all_files(input_folder=SENTINEL_1_UNZIPPED_FOLDER)
 unzip_all_files(
-    input_folder=SENTINEL_2_OUTPUT_FOLDER,
-    output_folder=SENTINEL_2_UNZIPPED_FOLDER
-)
-
-## LAI attempt
-PARCEL_PATH = "resources/" + "lcm2021_tile_11_1014_647.geojson"
-ERA_DIR = "resources/era_5/"
-lai = LAI_S1S2_fusion(
-    jsonloc=PARCEL_PATH,
-    FNAME="prova",
-    workingdir=ROOT_DIR,
-    s1dir=SENTINEL_1_UNZIPPED_FOLDER,
-    s2dir=SENTINEL_2_UNZIPPED_FOLDER,
-    ECMWF_ERA5_VPD=ERA_DIR,
-    snap_graphs_dir="resources/snap_graphs/",
-    snap_gtp_dir="C:/Program Files/esa-snap/bin/",
-    startdate=START_DATE,
-    enddate=END_DATE
+    input_folder=SENTINEL_2_OUTPUT_FOLDER, output_folder=SENTINEL_2_UNZIPPED_FOLDER
 )
