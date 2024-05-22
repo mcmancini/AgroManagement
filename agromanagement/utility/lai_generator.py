@@ -42,10 +42,15 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 
 gdal.UseExceptions()
-warnings.filterwarnings("ignore")
-warnings.filterwarnings(
-    "ignore", message="TIFFReadDirectory:Sum of Photometric type-related color channels and ExtraSamples doesn't match SamplesPerPixel.")
 
+# This does not work likely because the warning comes from snap called through
+# subprocess.call()
+MESSAGE = (
+    "Warning 1: TIFFReadDirectory:Sum of Photometric type-related color "
+    "channels and ExtraSamples doesn't match SamplesPerPixel. Defining "
+    "non-color channels as ExtraSamples."
+)
+warnings.filterwarnings("ignore", MESSAGE)
 
 class LaiGenerator:
     """

@@ -14,7 +14,7 @@ import geopandas as gpd
 from agromanagement.utility.lai_generator import LaiGenerator
 from agromanagement.utility.paths import ROOT_DIR
 
-warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.simplefilter(action='ignore')
 
 PARCELS_PATH = (
     "D:/Documents/GitHub/AgroManagement/resources/lcm2021_tile_11_1014_647.geojson"
