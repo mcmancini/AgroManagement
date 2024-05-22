@@ -463,8 +463,8 @@ class LaiGenerator:
                 )
 
                 subprocess.call(["powershell", powershell_command])
-            except subprocess.CalledProcessError as e:
-                print("Error:", e)
+            except subprocess.CalledProcessError as err:
+                print("Error:", err)
 
         # Reproject LAI tiffs and remove cloud pixels
         os.chdir(f"{self.s2_dir}processed")
@@ -516,9 +516,9 @@ class LaiGenerator:
         folders_s2.sort()
 
         ### Split fields in sub-fields
-        with open(fieldpolygonloc, encoding="utf-8") as f:
-            js = json.load(f)
-        for feature in js["features"]:
+        with open(fieldpolygonloc, encoding="utf-8") as json_file:
+            jason_poly = json.load(json_file)
+        for feature in jason_poly["features"]:
             polygon = shape(feature["geometry"])
         bbox_splitter = BBoxSplitter(
             [polygon], 4326, (5, 5)
@@ -526,11 +526,11 @@ class LaiGenerator:
 
         ### collect S2 LAI data per sub-field
         sentinel_2_df = pd.DataFrame(columns=["box", "date", "lai", "lai_std"])
-        for y, _ in enumerate(folders_s2):
-            for i, _ in enumerate(bbox_splitter.get_bbox_list()):
+        for folder_ind, _ in enumerate(folders_s2):
+            for box_ind, _ in enumerate(bbox_splitter.get_bbox_list()):
                 listofzones_lai = rasterstats.zonal_stats(
-                    (bbox_splitter.bbox_list[i]).geometry.wkt,
-                    folders_s2[y],
+                    (bbox_splitter.bbox_list[box_ind]).geometry.wkt,
+                    folders_s2[folder_ind],
                     stats=["mean", "std", "count"],
                     band=1,
                     nodata=0,
@@ -538,9 +538,9 @@ class LaiGenerator:
                 new_row = pd.DataFrame(
                     [
                         {
-                            "box": int(i),
+                            "box": int(box_ind),
                             "date": datetime.datetime.strptime(
-                                folders_s2[y][11:19], "%Y%m%d"
+                                folders_s2[folder_ind][11:19], "%Y%m%d"
                             ),
                             "lai": listofzones_lai[0]["mean"],
                             "lai_std": listofzones_lai[0]["std"],
@@ -563,8 +563,8 @@ class LaiGenerator:
         sentinel_1_df = pd.DataFrame(
             columns=["box", "date", "band1", "band1_std", "band2", "band2_std"]
         )
-        for y, folder in enumerate(folders_s1):
-            for ii, bbox in enumerate(bbox_splitter.get_bbox_list()):
+        for _, folder in enumerate(folders_s1):
+            for box_ind, bbox in enumerate(bbox_splitter.get_bbox_list()):
                 band1 = rasterstats.zonal_stats(
                     bbox.geometry.wkt,
                     f"{self.s1_dir}processed/{folder}",
@@ -584,7 +584,7 @@ class LaiGenerator:
                 new_row = pd.DataFrame(
                     [
                         {
-                            "box": int(ii),
+                            "box": int(box_ind),
                             "date": datetime.datetime.strptime(folder[24:32], "%Y%m%d"),
                             "band1": band1[0]["mean"],
                             "band1_std": band1[0]["std"],
@@ -608,14 +608,14 @@ class LaiGenerator:
         merged_sentinel = merged_sentinel[
             merged_sentinel.date.isin(sentinel_2_v2.date.unique())
         ]
-        for ii in range(len(set(merged_sentinel.date))):
-            for b in range(len(set(sentinel_2_v2.box))):
-                date_mask = merged_sentinel.date == merged_sentinel.date.unique()[ii]
-                box_mask = merged_sentinel.box == sentinel_2_v2.box.unique()[b]
+        for ind in range(len(set(merged_sentinel.date))):
+            for box in range(len(set(sentinel_2_v2.box))):
+                date_mask = merged_sentinel.date == merged_sentinel.date.unique()[ind]
+                box_mask = merged_sentinel.box == sentinel_2_v2.box.unique()[box]
 
                 df_filter = (
-                    sentinel_2_v2.date == merged_sentinel.date.unique()[ii]
-                ) & (sentinel_2_v2.box == sentinel_2_v2.box.unique()[b])
+                    sentinel_2_v2.date == merged_sentinel.date.unique()[ind]
+                ) & (sentinel_2_v2.box == sentinel_2_v2.box.unique()[box])
                 filtered_s2_v2 = sentinel_2_v2[df_filter]
 
                 if not filtered_s2_v2.empty:
@@ -626,7 +626,6 @@ class LaiGenerator:
                     merged_sentinel.loc[date_mask & box_mask, "lai_std"] = (
                         filtered_s2_v2["lai_std"].values[0]
                     )
-        del b, ii
 
         ### Load and process met data
         os.chdir(f"{self.workingdir}/{self.era_dir}")
@@ -648,49 +647,48 @@ class LaiGenerator:
         # VPD - resample from hourly to daily
         era_df = pd.DataFrame(columns=["date", "vpd"])
         for ii, folder_met in enumerate(folders_met):
-            ds = xr.open_dataset(folder_met)
-            dsloc = ds.sel(
+            era_dataset = xr.open_dataset(folder_met)
+            dsloc = era_dataset.sel(
                 longitude=float(shapefile["lon"]),  # polygon centroid lon
                 latitude=float(shapefile["lat"]),  # polygon centroid lat
                 method="nearest",
             )
-            df = dsloc.to_dataframe()
+            temp_df = dsloc.to_dataframe()
 
             # Unit conversion
-            df["t2m"] -= 273.15
-            df["d2m"] -= 273.15
+            temp_df["t2m"] -= 273.15
+            temp_df["d2m"] -= 273.15
 
             # Relative humidity calculation
-            df["RH"] = 100 * (
-                np.exp((17.625 * df["d2m"]) / (243.04 + df["d2m"]))
-                / np.exp((17.625 * df["t2m"]) / (243.04 + df["t2m"]))
+            temp_df["RH"] = 100 * (
+                np.exp((17.625 * temp_df["d2m"]) / (243.04 + temp_df["d2m"]))
+                / np.exp((17.625 * temp_df["t2m"]) / (243.04 + temp_df["t2m"]))
             )
 
             # Vapor pressure deficit calculation
-            df["VPD"] = (1 - (df["RH"] / 100)) * (
-                610.7 * 10 ** (7.5 * df["t2m"] / (237.3 + df["t2m"]))
+            temp_df["VPD"] = (1 - (temp_df["RH"] / 100)) * (
+                610.7 * 10 ** (7.5 * temp_df["t2m"] / (237.3 + temp_df["t2m"]))
             )
 
-            df = df.reset_index()
-            df.index = pd.date_range(
-                f"{folders_met[ii][5:9]}-01-01", periods=len(df), freq="h"
+            temp_df = temp_df.reset_index()
+            temp_df.index = pd.date_range(
+                f"{folders_met[ii][5:9]}-01-01", periods=len(temp_df), freq="h"
             )
 
             # Resample from hourly to daily
             met_data = []
 
-            for t in range(int(len(df) / float(24))):
+            for ind in range(int(len(temp_df) / float(24))):
                 met_data.append(
                     {
                         "date": pd.date_range(
                             f"{folders_met[ii][5:9]}-01-01",
-                            periods=int(len(df) / float(8)),
+                            periods=int(len(temp_df) / float(8)),
                             freq="D",
-                        )[t],
-                        "vpd": df["VPD"].resample("D", label="left").mean().iloc[t],
+                        )[ind],
+                        "vpd": temp_df["VPD"].resample("D", label="left").mean().iloc[ind],
                     }
                 )
-            del t
             era_df = pd.concat([era_df, pd.DataFrame(met_data)], ignore_index=True)
 
             era_df.index = era_df["date"]
@@ -708,9 +706,9 @@ class LaiGenerator:
             test_size=0.2,
             random_state=0,
         )
-        rf = RandomForestRegressor(n_estimators=100)
-        rf.fit(x_train, y_train)
-        rf_score = rf.score(x_test, y_test)
+        random_forest = RandomForestRegressor(n_estimators=100)
+        random_forest.fit(x_train, y_train)
+        rf_score = random_forest.score(x_test, y_test)
         np.save(
             f"{self.workingdir}{self.filename}_RF_R2={rf_score}.npy",
             np.array([rf_score]),
@@ -724,7 +722,7 @@ class LaiGenerator:
         sentinel_1_df = sentinel_1_df.dropna()
         sentinel_1_df["vpd"] = era_df.vpd
         sentinel_1_df["rf_LAI"] = np.nan
-        sentinel_1_df["rf_LAI"] = rf.predict(
+        sentinel_1_df["rf_LAI"] = random_forest.predict(
             sentinel_1_df[["band1", "band2", "DOY", "vpd"]]
         )
 
