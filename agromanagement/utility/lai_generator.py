@@ -646,7 +646,7 @@ class LaiGenerator:
         # fill a era_df pandas dataframe with the climate data needed to calculate
         # VPD - resample from hourly to daily
         era_df = pd.DataFrame(columns=["date", "vpd"])
-        for ii, folder_met in enumerate(folders_met):
+        for file_id, folder_met in enumerate(folders_met):
             era_dataset = xr.open_dataset(folder_met)
             dsloc = era_dataset.sel(
                 longitude=float(shapefile["lon"]),  # polygon centroid lon
@@ -672,7 +672,7 @@ class LaiGenerator:
 
             temp_df = temp_df.reset_index()
             temp_df.index = pd.date_range(
-                f"{folders_met[ii][5:9]}-01-01", periods=len(temp_df), freq="h"
+                f"{folders_met[file_id][5:9]}-01-01", periods=len(temp_df), freq="h"
             )
 
             # Resample from hourly to daily
@@ -682,7 +682,7 @@ class LaiGenerator:
                 met_data.append(
                     {
                         "date": pd.date_range(
-                            f"{folders_met[ii][5:9]}-01-01",
+                            f"{folders_met[file_id][5:9]}-01-01",
                             periods=int(len(temp_df) / float(8)),
                             freq="D",
                         )[ind],
