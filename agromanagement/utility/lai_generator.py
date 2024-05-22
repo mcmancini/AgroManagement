@@ -43,6 +43,8 @@ from sklearn.model_selection import train_test_split
 
 gdal.UseExceptions()
 warnings.filterwarnings("ignore")
+warnings.filterwarnings(
+    "ignore", message="TIFFReadDirectory:Sum of Photometric type-related color channels and ExtraSamples doesn't match SamplesPerPixel.")
 
 
 class LaiGenerator:
@@ -734,9 +736,10 @@ class LaiGenerator:
         daily_rf_lai.index = pd.to_datetime(daily_rf_lai.index)
         daily_rf_lai = daily_rf_lai.iloc[:-1]
         lai_timeseries = daily_rf_lai.rf_LAI.resample("7D", label="right").mean()[:-1]
-        lai_timeseries.reset_index().rename(columns={"index": "date"})
-        lai_timeseries.to_csv(
-            f"{self.workingdir}lai_timeseries_{self.filename}.csv", index=False
+        lai_timeseries_df = lai_timeseries.to_frame().reset_index()
+        lai_timeseries_df.rename(columns={"index": "date"})
+        lai_timeseries_df.to_csv(
+            f"{self.workingdir}/lai_timeseries_{self.filename}.csv", index=False
         )
 
 
