@@ -52,6 +52,7 @@ MESSAGE = (
 )
 warnings.filterwarnings("ignore", MESSAGE)
 
+
 class LaiGenerator:
     """
     ---------------------------------------------------------------
@@ -97,6 +98,7 @@ class LaiGenerator:
         should follow that used in this script (see SNAP-calling lines 247 and 367)
     --------------------------------------
     """
+
     # pylint: disable=R0913
     def __init__(
         self,
@@ -686,7 +688,10 @@ class LaiGenerator:
                             periods=int(len(temp_df) / float(8)),
                             freq="D",
                         )[ind],
-                        "vpd": temp_df["VPD"].resample("D", label="left").mean().iloc[ind],
+                        "vpd": temp_df["VPD"]
+                        .resample("D", label="left")
+                        .mean()
+                        .iloc[ind],
                     }
                 )
             era_df = pd.concat([era_df, pd.DataFrame(met_data)], ignore_index=True)
