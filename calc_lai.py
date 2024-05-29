@@ -9,28 +9,20 @@ utils/lai_generator.py. More info in both scripts.
 """
 import warnings
 
-import geopandas as gpd
-
 from agromanagement.utility.lai_generator import LaiGenerator
 from agromanagement.utility.paths import ROOT_DIR
 
-warnings.simplefilter(action='ignore')
+warnings.simplefilter(action="ignore")
 
-PARCELS_PATH = (
-    "D:/Documents/GitHub/AgroManagement/resources/lcm2021_tile_11_1014_647.geojson"
-)
-parcels = gpd.read_file(PARCELS_PATH)
-parcel = parcels.iloc[1025:1026, :]
-parcel_name = parcel["gid"].iloc[0]
-parcel_path = f"D:/Documents/GitHub/AgroManagement/resources/{parcel_name}.geojson"
-parcel.to_file(parcel_path, driver="GeoJSON")
+PARCEL_NAME = "723134"
+parcel_path = f"D:/Documents/GitHub/AgroManagement/resources/{PARCEL_NAME}.geojson"
 
 SENTINEL_1_UNZIPPED_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_1/"
 SENTINEL_2_UNZIPPED_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_2/"
 ERA_DIR = "resources/era_5/"
 
-START_DATE = "2019-04-01"
-END_DATE = "2019-04-30"
+START_DATE = "2019-01-01"
+END_DATE = "2019-12-31"
 
 lai = LaiGenerator(
     jsonloc=parcel_path,
