@@ -16,10 +16,12 @@ dependencies:
   - psycopg2
   - pyproj
   - pyyaml
+  - sentinelhub
   - xarray
   - pip:
     # - boto3
     - cdsapi
-    - cdsetool
+    - cdsetool==0.2.8
+    - rasterstats
     # - rasterio[s3]
     # - sat-search
