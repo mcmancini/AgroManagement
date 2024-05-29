@@ -36,8 +36,8 @@ print(parcel)
 geometry = parcel.iloc[0, :]["geometry"]
 geom_json = mapping(geometry)
 
-START_DATE = "2019-04-01"
-END_DATE = "2019-04-30"
+START_DATE = "2019-01-01"
+END_DATE = "2019-12-31"
 
 SENTINEL_1_OUTPUT_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_1/"
 SENTINEL_2_OUTPUT_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_2/"
@@ -73,30 +73,28 @@ sentinel_2_feature_list = query_features(
     collection=S2_COLLECTION, search_terms=search_terms
 )
 
-s1_downloads = download_features(
-    sentinel_1_feature_list,
-    SENTINEL_1_OUTPUT_FOLDER,
-    {
-        "concurrency": 4,
-        "monitor": StatusMonitor(),
-        "credentials": Credentials(),
-    },
+list(
+    download_features(
+        sentinel_1_feature_list,
+        SENTINEL_1_OUTPUT_FOLDER,
+        {
+            "concurrency": 5,
+            "monitor": StatusMonitor(),
+            "credentials": Credentials(),
+        },
+    )
 )
-for item in s1_downloads:
-    print(f"feature {item} downloaded")
 
-
-s2_downloads = download_features(
-    sentinel_2_feature_list,
-    SENTINEL_2_OUTPUT_FOLDER,
-    {
-        "concurrency": 4,
-        "monitor": StatusMonitor(),
-        "credentials": Credentials(),
-    },
+list(download_features(
+        sentinel_2_feature_list,
+        SENTINEL_2_OUTPUT_FOLDER,
+        {
+            "concurrency": 5,
+            "monitor": StatusMonitor(),
+            "credentials": Credentials(),
+        },
+    )
 )
-for item in s2_downloads:
-    print(f"feature {item} downloaded")
 
 download_era(start_date=START_DATE, end_date=END_DATE)
 
