@@ -14,11 +14,11 @@ from agromanagement.utility.paths import ROOT_DIR
 
 warnings.simplefilter(action="ignore")
 
-PARCEL_NAME = "723134"
+PARCEL_NAME = "SY17219007"
 parcel_path = f"D:/Documents/GitHub/AgroManagement/resources/{PARCEL_NAME}.geojson"
 
-SENTINEL_1_UNZIPPED_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_1/"
-SENTINEL_2_UNZIPPED_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_2/"
+SENTINEL_1_UNZIPPED_FOLDER = f"D:/Documents/Data/Sentinel/Sentinel_1/{PARCEL_NAME}/"
+SENTINEL_2_UNZIPPED_FOLDER = f"D:/Documents/Data/Sentinel/Sentinel_2/{PARCEL_NAME}/"
 ERA_DIR = "resources/era_5/"
 
 START_DATE = "2019-01-01"
@@ -26,7 +26,7 @@ END_DATE = "2019-12-31"
 
 lai = LaiGenerator(
     jsonloc=parcel_path,
-    filename="prova",
+    filename="SY17219007",
     workingdir=ROOT_DIR,
     s1_dir=SENTINEL_1_UNZIPPED_FOLDER,
     s2_dir=SENTINEL_2_UNZIPPED_FOLDER,
