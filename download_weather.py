@@ -29,9 +29,7 @@ sys.path.append("../")
 credentials = Credentials()
 
 # define a parcel
-parcels = gpd.read_file("resources/" + "lcm2021_tile_11_1014_647.geojson")
-parcel = parcels.iloc[1025:1026, :]
-print(parcel)
+parcel = gpd.read_file("resources/" + "SY17219007.geojson")
 
 geometry = parcel.iloc[0, :]["geometry"]
 geom_json = mapping(geometry)
@@ -39,8 +37,8 @@ geom_json = mapping(geometry)
 START_DATE = "2019-01-01"
 END_DATE = "2019-12-31"
 
-SENTINEL_1_OUTPUT_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_1/"
-SENTINEL_2_OUTPUT_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_2/"
+SENTINEL_1_OUTPUT_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_1/SY17219007/"
+SENTINEL_2_OUTPUT_FOLDER = "D:/Documents/Data/Sentinel/Sentinel_2/SY17219007/"
 
 
 S1_COLLECTION = "Sentinel1"
@@ -67,11 +65,13 @@ search_terms = {
     "completionDate": END_DATE,
     "geometry": geometry,
     "productType": S2_PRODUCT_TYPE,
+    "processingBaseline": "05.00",
 }
 
 sentinel_2_feature_list = query_features(
     collection=S2_COLLECTION, search_terms=search_terms
 )
+len(sentinel_2_feature_list)
 
 list(
     download_features(
